@@ -1,24 +1,33 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+
+// 3. 子组件通过 forwardRef 获取 ref，并通过 ref 属性绑定 React 元素
+const Child = React.forwardRef<HTMLInputElement>((props, ref) => (
+  <input ref={ref} placeholder="value" />
+));
+
+class Parent extends React.Component {
+    inputRef: any;
+    constructor(props: any) {
+        super(props)
+        // 1. 创建 refs
+        this.inputRef = React.createRef();
+    }
+    componentDidMount() {
+        setTimeout(() => {
+            // 4. 使用 this.inputRef.current 获取子组件中渲染的 DOM 节点
+            this.inputRef.current.value = 'new value'
+        }, 2000)
+    }
+    render() {
+        // 2. 传给子组件的 ref 属性
+        return <Child ref={this.inputRef} />
+    }
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Parent />
     </div>
   );
 }
